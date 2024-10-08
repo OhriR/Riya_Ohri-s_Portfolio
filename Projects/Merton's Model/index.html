@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Credit Risk Modeling - Riya Ohri</title>
+    <link rel="stylesheet" href="../../styles.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Meta Tags for Responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Prism.js for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Credit Risk Modeling</h1>
+            <nav aria-label="Main Navigation" class="project-nav">
+                <ul>
+                    <li><a href="../../index.html">Home Page</a></li> 
+                    <li><a href="../index.html">Projects</a></li>
+                    <li><a href="../../certifications/index.html">Certifications</a></li>
+                    <li><a href="../../contact/index.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Project Overview -->
+        <section id="project-overview">
+            <h2>Project Overview</h2>
+            <p>
+                This project aims to develop a credit risk model using the Merton model to estimate the default probability of a firm. 
+                The Merton model is a structural model that evaluates a company's credit risk by treating its equity as a call option on its assets. 
+                This approach allows us to estimate the probability that the value of the firm's assets will fall below its liabilities, which indicates a potential default.
+            </p>
+            <h3>Key Steps for the Model</h3>
+            <p>
+                <strong>Data Collection:</strong> Use financial APIs (e.g., Yahoo Finance or WRDS) to obtain the historical balance sheet data, including key variables like total assets, 
+                equity, and debt. Collect market information such as the latest stock price, shares outstanding, and risk-free rate.
+            </p>
+            <p>
+                <strong>Model Inputs Calculation:</strong> 
+                <ul>
+                    <li><strong>Market Value of Equity (E):</strong> Calculate using the latest stock price and number of shares outstanding.</li>
+                    <li><strong>Equity Volatility (σ_E):</strong> Compute from the historical daily returns of the stock price.</li>
+                    <li><strong>Debt Value (K):</strong> Obtain from balance sheet data, representing the sum of long-term debt and current liabilities.</li>
+                </ul>
+            </p>
+            <p>
+                <strong>Asset Value (A) and Asset Volatility (σ_A) Estimation:</strong> Use an iterative process to estimate the firm's total asset value and asset volatility using the equity value, equity volatility, and debt value.
+            </p>
+            <p>
+                <strong>Probability of Default (PD) Calculation:</strong> Use the Black-Scholes option pricing formula to estimate the probability that the firm's asset value will fall below its debt value at the time of debt maturity.
+            </p>
+            <p>
+                <strong>Sensitivity Analysis:</strong> Analyze how changes in key parameters (e.g., debt value, asset volatility, risk-free rate) impact the probability of default.
+                Create visualizations to illustrate the relationship between these factors and the estimated PD.
+            </p>
+            <p>
+                <strong>Credit Rating Comparison:</strong> Compare the calculated probability of default with industry-standard credit ratings from agencies like Moody's or S&P to determine the equivalent credit rating for the firm.
+            </p>
+        </section>
+
+        <!-- Project Details -->
+        <section id="project-details">
+            <h2>Project Details</h2>
+            <ul>
+                <li><strong>Ticker Symbol:</strong> F</li>
+                <li><strong>Technologies Used:</strong> Pandas, NumPy, SciPy, Matplotlib</li>
+                <li><strong>Date:</strong> August 2024</li>
+                <li><strong>Data Sources:</strong> Yahoo Finance API, WRDS (Compustat), DBRS Morningstar for credit ratings</li>
+            </ul>
+        </section>
+
+        <!-- Key Code Snippet -->
+        <section id="project-code">
+            <h2>Key Code Snippet</h2>
+            <pre><code class="language-python">
+# Black-Scholes Call Option Pricing Function
+def black_scholes_call(S, K, T, r, sigma):
+    if T <= 0:
+        return max(S - K, 0)  # Intrinsic value
+    d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+    call_price = S * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
+    return call_price
+            </code></pre>
+            <!-- Include Prism.js for syntax highlighting -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+        </section>
+
+        <!-- Iterative Process Code Snippet -->
+        <section id="iterative-process">
+            <h2>Iterative Process for Asset Value and Volatility Estimation</h2>
+            <pre><code class="language-python">
+# Initial Parameters
+A = 273310 * 1e6  # Initial asset value estimate in millions converted to actual value
+sigma_A = equity_volatility  # Initial asset volatility estimate
+tolerance = 1e-6
+max_iterations = 1000
+iteration = 0
+
+# Iterative Estimation
+while iteration < max_iterations:
+    d1 = (np.log(A / debt_value) + (risk_free_rate + 0.5 * sigma_A ** 2) * T) / (sigma_A * np.sqrt(T))
+    d2 = d1 - sigma_A * np.sqrt(T)
+
+    # Estimated Equity Value using Black-Scholes
+    E_estimate = A * norm.cdf(d1) - debt_value * np.exp(-risk_free_rate * T) * norm.cdf(d2)
+
+    # Estimated Equity Volatility
+    sigma_E_estimate = sigma_A * A / E_estimate * norm.cdf(d1)
+
+    # Update Asset Value and Volatility
+    A_new = market_value_of_equity + debt_value * norm.cdf(d2) * np.exp(-risk_free_rate * T)
+    sigma_A_new = equity_volatility / (A / E_estimate * norm.cdf(d1))
+
+    # Check for Convergence
+    if abs(A_new - A) < tolerance and abs(sigma_A_new - sigma_A) < tolerance:
+        break
+
+    # Update Estimates for Next Iteration
+    A = A_new
+    sigma_A = sigma_A_new
+    iteration += 1
+
+# Print Results
+print(f"Estimated Asset Value (A): ${A:.2f}")
+print(f"Estimated Asset Volatility (σ_A): {sigma_A:.2%}")
+            </code></pre>
+            <!-- Include Prism.js for syntax highlighting -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+        </section>
+
+        <!-- Project Visualizations -->
+        <section id="project-visualizations">
+            <h2>Project Visualizations</h2>
+            <div class="chart-gallery">
+                <!-- Visualization 1: PD vs. Debt Value -->
+                <figure>
+                    <img src="Graphs/pdvsdebt.png" alt="Sensitivity Analysis: PD vs. Debt Value" class="graph-image">
+                    <figcaption>The graph you've provided shows the Probability of Default (PD) as a function of varying Debt Value (K).
+                                We can observe that as the debt value increases, the Probability of Default also increases significantly, especially beyond a certain debt threshold. 
+                               This is consistent with intuition—higher levels of debt make it more challenging for the firm to meet its obligations, increasing its likelihood of default.
+                    </figcaption>
+                </figure>
+
+                <!-- Visualization 2: PD vs. Asset Volatility -->
+                <figure>
+                    <img src="Graphs/pdvsassets.png" alt="Sensitivity Analysis: PD vs. Asset Volatility" class="graph-image">
+                    <figcaption>This graph shows the Probability of Default (PD) as a function of Asset Volatility.
+                     As asset volatility increases, the Probability of Default also increases. 
+                     This trend makes sense because higher asset volatility implies greater uncertainty in the asset's value, 
+                     which in turn raises the risk of the asset value dropping below the debt value, leading to default.
+                    </figcaption>
+                </figure>
+
+                <!-- Visualization 3: PD vs. Risk-Free Rate -->
+                <figure>
+                    <img src="Graphs/pdvsrf.png" alt="Sensitivity Analysis: PD vs. Risk-Free Rate" class="graph-image">
+                    <figcaption>The graph above shows the Probability of Default (PD) as a function of the Risk-Free Rate (r).
+                         As the risk-free rate increases, the Probability of Default decreases. 
+                         This is because a higher risk-free rate implies that the present value of the debt (discounted at the risk-free rate) is lower, 
+                         reducing the likelihood that the firm will default on its obligations.
+                    </figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- Conclusions -->
+        <section id="project-conclusions">
+            <h2>Conclusions</h2>
+            <p>
+                Through this project, I successfully implemented the Merton model to estimate the credit risk of Ford Motor Company. By treating equity as a call option on the firm's assets, I was able to derive meaningful insights into the probability of default based on various financial parameters.
+            </p>
+            <p>
+                The sensitivity analyses highlighted the critical factors influencing credit risk, such as debt levels, asset volatility, and prevailing risk-free rates. These analyses not only validated the robustness of the model but also provided valuable perspectives for financial decision-making and risk management.
+            </p>
+            <p>
+                Comparing the calculated probability of default with industry-standard credit ratings affirmed the model's practical applicability, offering a quantifiable measure that aligns with established financial assessment frameworks.
+            </p>
+        </section>
+
+        <!-- Repository Link -->
+        <section id="project-repository">
+            <h2>Repository</h2>
+            <p>
+                You can view and access the complete source code for this project on <a href="https://github.com/OhriR/Credit-Risk-Modeling" target="_blank" class="btn" aria-label="View Credit Risk Modeling Repository on GitHub">GitHub</a>.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Riya Ohri</p>
+    </footer>
+</body>
+</html>
