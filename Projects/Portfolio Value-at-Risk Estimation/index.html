@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Value-at-Risk (VaR) Estimation - Riya Ohri</title>
+    <link rel="stylesheet" href="../../styles.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons (Optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Value-at-Risk (VaR) Estimation</h1>
+            <nav aria-label="Main Navigation" class="project-nav">
+                <ul>
+                    <li><a href="../../index.html">Home Page</a></li> 
+                    <li><a href="../index.html">Projects</a></li>
+                    <li><a href="../../certifications/index.html">Certifications</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Project Overview -->
+        <section id="project-overview">
+            <h2>Project Overview</h2>
+            <p>
+                This project demonstrates the estimation of Value-at-Risk (VaR) using three different methods: Historical Simulation, Parametric (Variance-Covariance), and Monte Carlo Simulation. The project uses Python and the `yfinance`, `pandas`, `numpy`, `scipy`, and `matplotlib` libraries to fetch historical data for Apple (AAPL), Microsoft (MSFT), and Google (GOOGL), and calculate the VaR of a weighted portfolio.
+            </p>
+            <p>
+                The project includes fetching historical data, calculating portfolio returns, and estimating VaR using different methodologies. The results are visualized to compare the VaR models.
+            </p>
+        </section>
+
+        <!-- Project Details -->
+        <section id="project-details">
+            <h2>Project Details</h2>
+            <ul>
+                <li><strong>Assets:</strong> Apple (AAPL), Microsoft (MSFT), Google (GOOGL)</li>
+                <li><strong>VaR Models Implemented:</strong> Historical Simulation, Parametric (Variance-Covariance), Monte Carlo Simulation</li>
+                <li><strong>Technologies Used:</strong> Python, yfinance, pandas, numpy, scipy, matplotlib</li>
+                <li><strong>Date:</strong> October 2024</li>
+            </ul>
+        </section>
+
+        <!-- Code Snippet -->
+        <section id="project-code">
+            <h2>Key Code Snippet</h2>
+            <pre><code class="language-python">
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+import yfinance as yf
+
+# Fetch historical data for 3 assets using yfinance
+symbols = ['AAPL', 'MSFT', 'GOOGL']  # Example symbols for Apple, Microsoft, and Google
+start_date = '2000-01-01'
+end_date = '2024-01-01'
+
+data = yf.download(symbols, start=start_date, end=end_date)['Adj Close']
+
+# Calculate daily returns
+daily_returns = data.pct_change().dropna()
+
+# Portfolio weights (modify these based on your portfolio composition)
+weights = np.array([0.3, 0.3, 0.4])  # Example weights for a 3-asset portfolio
+
+# Calculate portfolio returns
+daily_portfolio_returns = daily_returns.dot(weights)
+
+# Set VaR parameters
+confidence_level = 0.95  # Confidence level for VaR
+time_horizon = 1  # Time horizon for VaR estimation (1 day)
+
+# 1. Historical Simulation VaR
+var_historical = -np.percentile(daily_portfolio_returns, (1 - confidence_level) * 100)
+
+# 2. Parametric (Variance-Covariance) VaR
+mean_return = np.mean(daily_portfolio_returns)
+std_deviation = np.std(daily_portfolio_returns)
+var_parametric = - (mean_return + stats.norm.ppf(1 - confidence_level) * std_deviation)
+
+# 3. Monte Carlo Simulation VaR
+num_simulations = 10000
+simulated_returns = np.random.normal(mean_return, std_deviation, num_simulations)
+var_monte_carlo = -np.percentile(simulated_returns, (1 - confidence_level) * 100)
+
+# Display results
+print(f"Historical Simulation VaR: {var_historical:.2f}")
+print(f"Parametric (Variance-Covariance) VaR: {var_parametric:.2f}")
+print(f"Monte Carlo Simulation VaR: {var_monte_carlo:.2f}")
+            </code></pre>
+            <!-- Include Prism.js for syntax highlighting (if desired) -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+        </section>
+
+        <!-- Graphs Section -->
+        <section id="project-graphs">
+            <h2>Project Visualizations</h2>
+            <div class="graph-gallery">
+                <div class="graph-item">
+                    <img src="Graphs/Fig.png" alt="Value-at-Risk Plot" class="graph-image">
+                    <figcaption>Visualization of Daily Portfolio Returns alongside Value-at-Risk (VaR) Estimates using Historical Simulation, Parametric (Variance-Covariance), 
+                        and Monte Carlo methods. 
+                        The chart shows the volatility of returns and highlights the estimated risk thresholds set by each VaR method over time.
+                    </figcaption>
+                </div>
+            </div>
+        </section>
+       <!-- Conclusions -->
+        <section id="project-conclusions">
+            <h2>Results</h2>
+             <p>
+             <strong>VaR Estimates:</strong>
+             <ul>
+            <li>Historical Simulation VaR: 0.02</li>
+            <li>Parametric (Variance-Covariance) VaR: 0.02</li>
+            <li>Monte Carlo Simulation VaR: 0.03</li>
+             </ul>
+             </p>
+            <p>
+             <strong>Backtesting Results:</strong>
+             <ul>
+            <li><strong>Historical VaR:</strong> Number of violations: 244, Failure rate: 5.01%</li>
+            <li><strong>Parametric VaR:</strong> Number of violations: 231, Failure rate: 4.74%</li>
+            <li><strong>Monte Carlo VaR:</strong> Number of violations: 212, Failure rate: 4.35%</li>
+             </ul>
+              </p>
+             <h2>Conclusions</h2>
+              <p>
+        This project provided insights into the different methodologies for calculating Value-at-Risk (VaR). Each method has its own advantages and limitations, and the choice of method depends on the underlying assumptions about asset return distributions and the available data. The visualizations effectively compared the three methods, highlighting the similarities and differences in their risk estimations.
+             </p>
+        </section>
+
+
+        <!-- Optional: Link to Code Repository -->
+        <section id="project-repository">
+            <h2>Repository</h2>
+            <p>
+                You can view and access the complete source code for this project on <a href="https://github.com/OhriR/Value-at-Risk-VaR-" target="_blank" aria-label="View Value-at-Risk Estimation Repository">GitHub</a>.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Riya Ohri</p>
+    </footer>
+</body>
+</html>
