@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>German Credit Risk Analysis - Riya Ohri</title>
+    <link rel="stylesheet" href="../../styles.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons (Optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>German Credit Risk Analysis</h1>
+            <nav aria-label="Main Navigation" class="project-nav">
+                <ul>
+                    <li><a href="../../index.html">Home Page</a></li> 
+                    <li><a href="../index.html">Projects</a></li>
+                    <li><a href="../../certifications/index.html">Certifications</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Project Overview -->
+        <section id="project-overview">
+            <h2>Project Overview</h2>
+            <p>
+                This project focuses on credit risk analysis using the German Credit Dataset from OpenML. The analysis involves building a Decision Tree Classifier to predict credit defaults. The model is trained on features like personal and financial details of customers, with metrics such as accuracy, classification reports, and confusion matrices being used to evaluate performance.
+            </p>
+        </section>
+
+        <!-- Project Details -->
+        <section id="project-details">
+            <h2>Project Details</h2>
+            <ul>
+                <li><strong>Dataset:</strong> German Credit Data from OpenML</li>
+                <li><strong>Model Used:</strong> Decision Tree Classifier</li>
+                <li><strong>Technologies Used:</strong> Python, pandas, numpy, scikit-learn, matplotlib, seaborn, graphviz</li>
+                <li><strong>Date:</strong> June 2024</li>
+            </ul>
+        </section>
+
+        <!-- Key Code Snippet -->
+        <section id="project-code">
+            <h2>Key Code Snippet</h2>
+            <pre><code class="language-python">
+# Train Decision Tree Classifier
+clf = DecisionTreeClassifier(criterion='gini', max_depth=5, random_state=42)
+clf.fit(X_train, y_train)
+
+# Evaluate the model
+y_pred = clf.predict(X_test)
+print(f'Accuracy: {accuracy_score(y_test, y_pred):.4f}')
+
+# Visualize the Decision Tree
+dot_data = export_graphviz(clf, out_file=None, feature_names=feature_names, 
+                           class_names=class_names, filled=True, rounded=True)
+graph = graphviz.Source(dot_data)
+graph.view()
+            </code></pre>
+            <!-- Include Prism.js for syntax highlighting (if desired) -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+        </section>
+
+        <!-- Graphs Section -->
+        <section id="project-graphs">
+            <h2>Visualizations</h2>
+            <div class="graph-gallery">
+                <div class="graph-item">
+                    <img src="Graphs/Confusion Matrix.png" alt="Confusion Matrix" class="graph-image">
+                    <figcaption>Confusion Matrix for the Decision Tree Classifier, showing the true vs predicted classifications of credit defaults.</figcaption>
+                </div>
+                <div class="graph-item">
+                    <img src="Graphs/Features.png" alt="Feature Importances" class="graph-image">
+                    <figcaption>Feature Importance Plot highlighting which features had the most influence in predicting credit defaults.</figcaption>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusions -->
+        <section id="project-conclusions">
+            <h2>Conclusions</h2>
+            <p>
+                The Decision Tree Classifier proved effective in predicting credit defaults for the German Credit dataset. By visualizing feature importance, we were able to identify key factors that contribute to credit risk. The model achieved reasonable accuracy, and cross-validation was performed to ensure robustness. Hyperparameter tuning was also used to further optimize the model.
+            </p>
+        </section>
+
+        <!-- Optional: Link to Code Repository -->
+        <section id="project-repository">
+            <h2>Repository</h2>
+            <p>
+                You can view and access the complete source code for this project on <a href="https://github.com/OhriR/German-Credit-Risk-Analysis" target="_blank" aria-label="View German Credit Risk Analysis Repository">GitHub</a>.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Riya Ohri</p>
+    </footer>
+</body>
+</html>
